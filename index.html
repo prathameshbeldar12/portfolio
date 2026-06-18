@@ -1,1263 +1,2580 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Personal Portfolio</title>
+  <title>Prathamesh Eknath Beldar | Portfolio</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Personal Portfolio of Prathamesh Eknath Beldar - IT Engineer specializing in Cybersecurity, SOC Analysis, and Python Back-end Automation.">
+  <meta name="keywords" content="Prathamesh Eknath Beldar, Cybersecurity, SOC Analyst, Python, Web Developer, Portfolio, B.E IT, Wireshark, Kali Linux, N8N">
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  
+  <style>
+    /* ----------------------------------------------------
+       1. CORE DESIGN SYSTEM & CUSTOM VARIABLES
+       ---------------------------------------------------- */
+    :root {
+      --bg-color: #0b0f10;
+      --surface-color: #101415;
+      --surface-bright: #1c2021;
+      --surface-glass: rgba(255, 255, 255, 0.03);
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --border-glass-hover: rgba(0, 210, 255, 0.25);
+      
+      --primary: #00d2ff;       /* Electric Cyan */
+      --primary-dim: #a5e7ff;
+      --primary-glow: rgba(0, 210, 255, 0.4);
+      --secondary: #afc6ff;     /* Neon Blue */
+      --secondary-glow: rgba(175, 198, 255, 0.3);
+      
+      --text-main: #e0e3e4;
+      --text-muted: #94a3b8;
+      
+      --font-display: 'Montserrat', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-  <!--
-    - favicon
-  -->
-  <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) var(--bg-color);
+    }
 
-  <!--
-    - custom css link
-  -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-color);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface-bright);
+      border-radius: 99px;
+      border: 2px solid var(--bg-color);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
 
-  <!--
-    - google font link
-  -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    html {
+      scroll-behavior: smooth;
+      font-family: var(--font-body);
+      color: var(--text-main);
+      background-color: var(--bg-color);
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* ----------------------------------------------------
+       2. BACKGROUND SHADER (WEBGL CANVAS)
+       ---------------------------------------------------- */
+    #bg-canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    #shader-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      opacity: 0.85;
+    }
+
+    .radial-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 20%, rgba(11, 15, 16, 0.95) 90%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ----------------------------------------------------
+       3. REUSABLE GLASS COMPONENTS & UTILITIES
+       ---------------------------------------------------- */
+    .glass-card {
+      background: var(--surface-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal);
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-glass-hover);
+      box-shadow: 0 10px 30px -10px rgba(0, 210, 255, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-title span {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(0, 210, 255, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(0, 210, 255, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border var(--transition-fast);
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+      border: 1px solid var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: #00b8e0;
+      box-shadow: 0 0 20px var(--primary-glow);
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-glass);
+      border-color: var(--primary);
+      transform: scale(0.97);
+    }
+
+    /* ----------------------------------------------------
+       4. HEADER & NAVIGATION
+       ---------------------------------------------------- */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(11, 15, 16, 0.5);
+      border-bottom: 1px solid var(--border-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background var(--transition-normal);
+    }
+
+    header.scrolled {
+      background: rgba(11, 15, 16, 0.85);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    nav {
+      height: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color var(--transition-fast);
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width var(--transition-fast);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-main);
+    }
+
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .burger-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    /* Mobile Nav Overlay */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 300px;
+      height: 100vh;
+      background: rgba(16, 20, 21, 0.98);
+      border-left: 1px solid var(--border-glass);
+      backdrop-filter: blur(20px);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      padding: 100px 3rem 3rem;
+      gap: 2rem;
+      transition: right var(--transition-normal);
+    }
+
+    .mobile-menu.open {
+      right: 0;
+    }
+
+    .mobile-menu a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color var(--transition-fast);
+    }
+
+    .mobile-menu a:hover,
+    .mobile-menu a.active {
+      color: var(--primary);
+    }
+
+    /* ----------------------------------------------------
+       5. HERO SECTION
+       ---------------------------------------------------- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 100px;
+      position: relative;
+    }
+
+    .hero-wrapper {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .hero-content h1 {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-content h1 span.gradient-text {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .typewriter-container {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--primary-dim);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cursor {
+      width: 2px;
+      height: 1.2em;
+      background: var(--primary);
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .hero-description {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-bottom: 1rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .hero-image-area {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 2rem;
+      overflow: hidden;
+      border: 1px solid var(--border-glass);
+      transition: transform var(--transition-normal);
+    }
+
+    .avatar-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent, rgba(11, 15, 16, 0.4));
+      z-index: 1;
+    }
+
+    .avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform var(--transition-normal);
+    }
+
+    .avatar-glow {
+      position: absolute;
+      inset: -5px;
+      border-radius: 2.2rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      z-index: -1;
+      opacity: 0.35;
+      filter: blur(15px);
+      transition: opacity var(--transition-normal);
+    }
+
+    .hero-image-area:hover .avatar-wrapper {
+      transform: scale(1.03) rotate(1deg);
+    }
+
+    .hero-image-area:hover .avatar-wrapper img {
+      transform: scale(1.08);
+    }
+
+    .hero-image-area:hover .avatar-glow {
+      opacity: 0.6;
+    }
+
+    /* ----------------------------------------------------
+       6. ABOUT SECTION (BENTO GRID)
+       ---------------------------------------------------- */
+    #about {
+      padding: 8rem 0;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 2rem;
+    }
+
+    .bento-main {
+      grid-column: span 8;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .bento-sidebar {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .bento-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .bento-card p strong {
+      color: var(--text-main);
+    }
+
+    .traits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .trait-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 0.75rem;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .trait-badge:hover {
+      background: rgba(0, 210, 255, 0.05);
+      border-color: var(--primary);
+    }
+
+    .trait-badge .material-symbols-outlined {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .trait-badge span:not(.material-symbols-outlined) {
+      font-size: 0.72rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .service-card {
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-glass);
+      border-radius: 0.75rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .service-card:hover {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--border-glass-hover);
+    }
+
+    .service-card .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.5rem;
+      background: rgba(0, 210, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .service-card h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .service-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Contact info list */
+    .contact-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .info-item .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .info-item .details p {
+      margin: 0;
+    }
+
+    .info-item .details .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .info-item .details .val {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glass);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .social-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ----------------------------------------------------
+       7. EDUCATION & INTERNSHIP TIMELINE
+       ---------------------------------------------------- */
+    #education {
+      padding: 8rem 0;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, var(--border-glass) 10%, var(--border-glass) 90%, transparent);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      width: 50%;
+      padding: 1rem 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+      text-align: right;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: 50%;
+      text-align: left;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 1.5rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg-color);
+      border: 3px solid var(--primary);
+      z-index: 2;
+      box-shadow: 0 0 10px var(--primary-glow);
+      transition: transform var(--transition-fast);
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot {
+      right: -8px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-dot {
+      left: -8px;
+    }
+
+    .timeline-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: inline-block;
+      text-align: left;
+      backdrop-filter: blur(8px);
+      width: 100%;
+      transition: border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .timeline-card:hover {
+      border-color: var(--border-glass-hover);
+      transform: translateY(-2px);
+    }
+
+    .timeline-item:hover .timeline-dot {
+      transform: scale(1.4);
+    }
+
+    .timeline-date {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-school {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .timeline-bullets {
+      margin-top: 0.5rem;
+      padding-left: 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .timeline-bullets li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* ----------------------------------------------------
+       8. SKILLS SECTION
+       ---------------------------------------------------- */
+    #skills {
+      padding: 8rem 0;
+    }
+
+    .skills-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .skills-header p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .skill-bar-container {
+      position: relative;
+    }
+
+    .skill-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .skill-name {
+      color: var(--text-main);
+    }
+
+    .skill-percentage {
+      color: var(--primary);
+    }
+
+    .skill-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 99px;
+      width: 0%;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .skill-fill::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--primary);
+      transform: translateY(-50%);
+    }
+
+    .skills-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .details-card {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-glass);
+      border-radius: 1rem;
+    }
+
+    .details-card .icon-box {
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 210, 255, 0.08);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .details-card h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .details-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* ----------------------------------------------------
+       9. PROJECTS SECTION
+       ---------------------------------------------------- */
+    #projects {
+      padding: 8rem 0;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .project-card {
+      overflow: hidden;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .project-img-wrapper {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+      background: #111;
+      border-bottom: 1px solid var(--border-glass);
+    }
+
+    .project-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition-slow);
+    }
+
+    .project-card:hover .project-img-wrapper img {
+      transform: scale(1.06);
+    }
+
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(11, 15, 16, 0.95));
+      pointer-events: none;
+    }
+
+    .project-details {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .project-bullets {
+      list-style-type: none;
+      padding-left: 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .project-bullets li {
+      position: relative;
+      padding-left: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .project-bullets li::before {
+      content: '⚡';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-size: 0.7rem;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: gap var(--transition-fast);
+      margin-top: auto;
+    }
+
+    .project-link:hover {
+      gap: 0.8rem;
+    }
+
+    /* ----------------------------------------------------
+       10. CERTIFICATES SECTION
+       ---------------------------------------------------- */
+    #certificates {
+      padding: 8rem 0;
+    }
+
+    .filter-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border-glass);
+      color: var(--text-muted);
+      padding: 0.6rem 1.5rem;
+      border-radius: 99px;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(0, 210, 255, 0.05);
+    }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .cert-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 1rem;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
+    }
+
+    .cert-card.hidden {
+      display: none;
+    }
+
+    .cert-card:hover {
+      border-color: var(--border-glass-hover);
+      box-shadow: 0 10px 30px -10px rgba(0, 210, 255, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .cert-img-box {
+      height: 180px;
+      overflow: hidden;
+      background: #151515;
+      border-bottom: 1px solid var(--border-glass);
+      position: relative;
+    }
+
+    .cert-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition-normal);
+    }
+
+    .cert-card:hover .cert-img-box img {
+      transform: scale(1.05);
+    }
+
+    .cert-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .cert-category {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary-dim);
+      font-weight: 700;
+    }
+
+    .cert-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text-main);
+      margin-top: 0.25rem;
+    }
+
+    .cert-view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+      margin-top: auto;
+    }
+
+    .cert-view-btn:hover {
+      color: var(--primary);
+    }
+
+    /* ----------------------------------------------------
+       11. CONTACT SECTION
+       ---------------------------------------------------- */
+    #contact {
+      padding: 8rem 0;
+    }
+
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+      align-items: stretch;
+    }
+
+    .contact-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .contact-left h2 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .contact-left p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glass);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--primary);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-normal);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .success-modal {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform var(--transition-normal);
+    }
+
+    .modal-overlay.active .success-modal {
+      transform: scale(1);
+    }
+
+    .success-modal .icon-wrapper {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(0, 210, 255, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .success-modal h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-modal p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* ----------------------------------------------------
+       12. FOOTER
+       ---------------------------------------------------- */
+    footer {
+      border-top: 1px solid var(--border-glass);
+      padding: 4rem 0;
+      background: rgba(11, 15, 16, 0.8);
+      position: relative;
+    }
+
+    .footer-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-copyright {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      transition: color var(--transition-fast);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    /* ----------------------------------------------------
+       13. SCROLL ANIMATION STATES & RESPONSIVE
+       ---------------------------------------------------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 992px) {
+      .hero-wrapper {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+      }
+      .hero-content {
+        align-items: center;
+      }
+      .hero-description {
+        margin: 0 auto;
+      }
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+      .bento-main, .bento-sidebar {
+        grid-column: span 12;
+      }
+      .skills-wrapper {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      .cert-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .timeline::before {
+        left: 2rem;
+      }
+      .timeline-item {
+        width: 100%;
+        padding-left: 4.5rem;
+        padding-right: 0;
+        margin-bottom: 2rem;
+      }
+      .timeline-item:nth-child(odd) {
+        left: 0;
+        text-align: left;
+      }
+      .timeline-item:nth-child(even) {
+        left: 0;
+        text-align: left;
+      }
+      .timeline-dot {
+        left: calc(2rem - 8px) !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .burger-btn {
+        display: block;
+      }
+      .hero-content h1 {
+        font-size: 2.3rem;
+      }
+      .cert-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group-row {
+        grid-template-columns: 1fr;
+      }
+      .footer-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+      }
+      .traits-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-  <!--
-    - #MAIN
-  -->
-
-  <main>
-
-    <!--
-      - #SIDEBAR
-    -->
-
-    <aside class="sidebar" data-sidebar>
-
-      <div class="sidebar-info">
-
-        <figure class="avatar-box">
-          <img src="assets\images\prathamesh pic.jpg" alt="PRATHAMESH BELDAR" width="80">
-        </figure>
-
-        <div class="info-content">
-          <h1 class="name" title="PRATHAMESH BELDAR">PRATHAMESH BELDAR</h1>
-
-          <p class="title">WEB DEVELOPER | PYTHON</p>
-        </div>
-
-        <button class="info_more-btn" data-sidebar-btn>
-          <span>Show Contacts</span>
-
-          <ion-icon name="chevron-down"></ion-icon>
-        </button>
-
-      </div>
-
-      <div class="sidebar-info_more">
-
-        <div class="separator"></div>
-
-        <ul class="contacts-list">
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="mail-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Email</p>
-
-              <a href="prathameshbeldar@gmail.com" class="contact-link">prathameshbeldar@gmail.com</a>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="phone-portrait-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Phone</p>
-
-              <a href="tel:+918459919259" class="contact-link">+91 8459919259</a>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="calendar-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Birthday</p>
-
-              <time datetime="2005-03-26">MARCH 26, 2005</time>
-            </div>
-
-          </li>
-
-          <li class="contact-item">
-
-            <div class="icon-box">
-              <ion-icon name="location-outline"></ion-icon>
-            </div>
-
-            <div class="contact-info">
-              <p class="contact-title">Location</p>
-
-              <address>AMRAVATI , MAHARASHTRA </address>
-            </div>
-
-          </li>
-
-        </ul>
-
-        <div class="separator"></div>
-
-        <ul class="social-list">
-
-          <li class="social-item">
-            <a href="#" class="social-link">
-              <ion-icon name="logo-facebook">h</ion-icon>
-            </a>
-          </li>
-
-          <li class="social-item">
-            <a href="#" class="social-link">
-              <ion-icon name="logo-twitter"></ion-icon>
-            </a>
-          </li>
-
-          <li class="social-item">
-            <a href="https://www.instagram.com/prathamesh_beldar__26?utm_source=qr&igsh=cnloejl6Y2F3aHI5" class="social-link">
-              <ion-icon name="logo-instagram"></ion-icon>
-            </a>
-          </li>
-          
-          <li class="social-item">
-            <a href="https://www.linkedin.com/in/prathamesh-beldar-357187283?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="social-link">
-              <ion-icon name="logo-linkedin"></ion-icon>
-            </a>
-          </li>
-          
-
-        </ul>
-
-      </div>
-
-    </aside>
-
-
-
-
-
-    <!--
-      - #main-content
-    -->
-
-    <div class="main-content">
-
-      <!--
-        - #NAVBAR
-      -->
-
-      <nav class="navbar">
-
-        <ul class="navbar-list">
-
-          <li class="navbar-item">
-            <button class="navbar-link  active" data-nav-link>About</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Resume</button>
-          </li>
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Portfolio</button>
-          </li>
-
-          
-
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Contact</button>
-          </li>
-
-        </ul>
-
-      </nav>
-
-
-
-
-
-      <!--
-        - #ABOUT
-      -->
-
-      <article class="about  active" data-page="about">
-
-        <header>
-          <h2 class="h2 article-title">About me</h2>
-        </header>
-
-        <section class="about-text">
-          <p>
-            I’m a web developer with learning new things. I have good knowledge of Python
-            programming and a strong interest in cybersecurity. 
-            I’ve created projects and enjoy designing websites using Canva ,
-            where I create posters, web layouts, and other graphics.
-             I also work on both front-end and back-end web development.
-
-          </p>
-
-          <p>
-            I am the Management Lead of the HICA Club, where I help plan events, lead teams,
-             and make sure everything runs smoothly. Being a leader in the club has taught me 
-             how to manage time, communicate with people, and work in a team.
-
-          </p>
-
-          <p>
-            I am also a member of IETE, where I stay updated with the latest trends
-             in electronics and communication. I have taken part in hackathons, where
-              I worked with others to solve real-world problems in a short time. These experiences 
-              helped me improve my teamwork and problem-solving skills.
-
-          </p>
-          <p>
-            I am always excited to learn more and grow in the tech field. 
-            I want to use my skills to build useful and meaningful projects that can help people.
-             Whether it's designing a website, writing code, or managing a team, 
-             I always try to give my best.
-             </p>
-        </section>
-
-
-        <!--
-          - service
-        -->
-
-        <section class="service">
-
-          <h3 class="h3 service-title">What i'm doing</h3>
-
-          <ul class="service-list">
-
-            <li class="service-item">
-
-              <div class="service-icon-box">
-                <img src="./assets/images/icon-dev.svg
-                " alt="design icon" width="40">
-              </div>
-
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title">WEB DEVELOPMENT</h4>
-
-                <p class="service-item-text">
-                  Creating websites that are user-friendly and well-designed. 
-                  learning and building project.  
-                </p>
-              </div>
-
-            </li>
-
-            <li class="service-item">
-
-              <div class="service-icon-box">
-                <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40">
-              </div>
-
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title">PYTHON</h4>
-
-                <p class="service-item-text">
-                 Use Python to build the logic behind websites and application.
-                 To manage data and perform useful tasks.
-                 practicing python programming for backend development.
-                </p>
-              </div>
-
-            </li>
-
-            <li class="service-item">
-
-              <div class="service-icon-box">
-                <img src="./assets/images/icon-dev.svg" alt="mobile app icon" width="40">
-              </div>
-
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title">DESIGNING CREATIVE</h4>
-
-                <p class="service-item-text">
-                 To make poster,web layouts, and graphics. 
-                 And present my ideas in a creative way.
-                </p>
-              </div>
-
-            </li>
-
-            <li class="service-item">
-
-              <div class="service-icon-box">
-                <img src="./assets/images/icon-dev.svg" alt="camera icon" width="40">
-              </div>
-
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title"> LEARNING </h4>
-
-                <p class="service-item-text">
-                  Build user interfaces and connect them to databases.
-                  this gives me complete experience in web dev.
-                  working on both front-end and back-end website project.
-                </p>
-              </div>
-
-            </li>
-
-          </ul>
-
-        </section>
-
-        <!--
-          - clients
-        -->
-
-        <section class="clients">
-
-          
-
-          <ul class="clients-list has-scrollbar">
-
-            <li class="clients-item">
-              
-                
-     
-            </li>
-            
-            
-        </section>
-
-
-        <!--
-          - testimonials
-        -->
-
-        <section class="testimonials">
-
-         
-          </section>
-
-
-        <!--
-          - testimonials modal
-        -->
-
-        <div class="modal-container" data-modal-container>
-
-          <div class="overlay" data-overlay></div>
-
-          <section class="testimonials-modal">
-
-            <button class="modal-close-btn" data-modal-close-btn>
-              <ion-icon name="close-outline"></ion-icon>
-            </button>
-
-            <div class="modal-img-wrapper">
-              <figure class="modal-avatar-box">
-                <img src="./assets/images/avatar-1.png" alt="Daniel lewis" width="80" data-modal-img>
-              </figure>
-
-              <img src="./assets/images/icon-quote.svg" alt="quote icon">
-            </div>
-
-            <div class="modal-content">
-
-              <h4 class="h3 modal-title" data-modal-title>Daniel lewis</h4>
-
-              <time datetime="2021-06-14">14 June, 2021</time>
-
-              <div data-modal-text>
-                <p>
-                  Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
-                  lot of experience
-                  and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
-                  consectetur adipiscing
-                  elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
-                </p>
-              </div>
-
-            </div>
-
-          </section>
-
-        </div>
-
-
+  <!-- Background WebGL Shader & Blend Overlays -->
+  <div id="bg-canvas-container">
+    <canvas id="shader-canvas"></canvas>
+  </div>
+  <div class="radial-overlay"></div>
+
+  <!-- Header Section -->
+  <header id="header">
+    <div class="container">
+      <nav>
+        <a href="#hero" class="logo">PRATHAMESH<span>.</span></a>
         
-      </article>
-
-
-
-
-
-      <!--
-        - #RESUME
-      -->
-
-      <article class="resume" data-page="resume">
-
-        <header>
-          <h2 class="h2 article-title">Resume</h2>
-        </header>
-
-        <section class="timeline">
-
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-
-            <h3 class="h3">Education</h3>
-          </div>
-
-          <ol class="timeline-list">
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">GRACE ACADEMY SCHOOL</h4>
-
-              <span>2020</span>
-
-              <p class="timeline-text">
-                I completed my 10th (SSC Board Exam) under the Maharashtra State Board
-                 from Grace Academy, Chalisgaon, with 82% marks.
-                  The result was declared and the year of passing was 2020.
-
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Rashtriya Vidyalaya (Jr. College)</h4>
-
-              <span>2020-2022</span>
-
-              <p class="timeline-text">
-                I completed my 12th (HSC Board Exam – Science Stream - [Information Technology]) 
-                under the Maharashtra State Board from Rashtriya Vidyalaya (Jr. College), Chalisgaon,
-                 scoring 66% marks.
-                  The result was declared and the year of passing was 2022.
-
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Professor Ram Meghe Institute of Technology and Research, 
-                Badnera,</h4>
-
-              <span>2022</span>
-
-              <p class="timeline-text">
-                I am currently pursuing my B.Tech in Information Technology 
-                at Professor Ram Meghe Institute of Technology and Research, 
-                Badnera, affiliated with Sant Gadge Baba Amravati University.
-               
-
-                eos.
-              </p>
-
-            </li>
-
-          </ol>
-
-        </section>
-
-        <section class="timeline">
-
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-
-            <h3 class="h3">Experience</h3>
-          </div>
-
-          <ol class="timeline-list">
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Pogramming Skills
-              </h4>
-
-              <span> WEB DEV | PYTHON | JAVASCRIPT</span>
-
-              <p class="timeline-text">
-                Earned Python Essentials and Java Training certificates.
-
-                Applied coding knowledge in both academic and personal projects.
-
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title">Cybersecurity Knowledge
-              </h4>
-
-              <span>Cisco Virtual Internship | Cybersecurity Essentials</span>
-
-              <p class="timeline-text">
-                Completed Introduction to Cybersecurity, Cybersecurity Essentials, and Cisco Packet Tracer training.
-
-                Gained a strong foundation in network security, threats, and secure communication.
-                Participated in the Cisco Virtual Internship, applying cybersecurity and networking concepts in real-world scenarios.
-                
-                Learned how to manage and simulate networks using industry tools.
-                
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title"> Technical Project Experience </h4>
-
-              <span> Websites</span>
-
-              <p class="timeline-text">
-                Built a restaurant website clone using web development technologies.
-
-Developed a digital clock project, demonstrating skills in logic building and UI design.
-
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title"> Internship </h4>
-
-              <span> Cloud Computing | Data Engineering
-              </span>
-
-              <p class="timeline-text">
-                Completed Google Developer Students Cloud Certificate and Cloud Virtual Internship.
-
-                Gained experience in basic cloud services and their use in application development.
-                
-                Finished a Data Engineering Virtual Internship, learning about data pipelines and processing.
-                
-                
-              </p>
-
-            </li>
-
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title"> Club Involvement
-              </h4>
-
-              <span>Club</span>
-
-              <p class="timeline-text">
-                Active member of Institution of Electronics and telecommunication Engineers [IETE] , regularly participating in tech events and sessions.
-                And also , Lead of the Management Team for the Higher Institute Campus Ambassador [HICA] 
-
-
-              </p>
-
-            </li>
-<li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title"> Project
-              </h4>
-
-              <span><a href="https://prathameshbeldar12.github.io/clockproject/">Clock Project </a></span>
-
-              <p class="timeline-text">
-                
-                A real-time digital clock built with HTML, CSS, and JavaScript. It displays the 
-                current time dynamically with smooth updates every second. The project focuses on clean 
-                design, responsive layout, and showcases skills in DOM manipulation and real-time JavaScript functionality.
-              </p>
-
-            </li>
-            <li class="timeline-item">
-
-              <h4 class="h4 timeline-item-title"> Project </h4>
-
-              <span><a href="https://prathameshbeldar12.github.io/cafewebsite/">Restaurant Web Clone</a></span>
-
-              <p class="timeline-text">
-                
-                A fully responsive restaurant website clone created using HTML, CSS, and JavaScript.
-                It replicates the look and feel of a professional restaurant site with modern design elements,
-                interactive menus, and smooth navigation. This project highlights skills in front-end development, 
-                layout design, and user experience enhancement.
-
-
-              </p>
-
-            </li>
-          </ol>
-
-        </section>
-
-        <section class="skill">
-
-          <h3 class="h3 skills-title">My skills</h3>
-
-          <ul class="skills-list content-card">
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Web development [HTML , CSS , JAVASCRIPT ]</h5>
-                <data value="85">85%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 85%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">PYTHON programming</h5>
-                <data value="70">70%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 70%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Cybersecurity Basics</h5>
-                <data value="60">60%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 60%;"></div>
-              </div>
-
-            </li>
-
-            <li class="skills-item">
-
-              <div class="title-wrapper">
-                <h5 class="h5">Team Management | Leadership</h5>
-                <data value="90">90%</data>
-              </div>
-
-              <div class="skill-progress-bg">
-                <div class="skill-progress-fill" style="width: 90%;"></div>
-              </div>
-
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #PORTFOLIO
-      -->
-
-      <article class="portfolio" data-page="portfolio">
-
-        <header>
-          <h2 class="h2 article-title">Certificate | Achivments</h2>
-        </header>
-
-        <section class="projects">
-
-          <ul class="filter-list">
-
-            <li class="filter-item">
-              <button class="active" data-filter-btn>Internship | Cybersecurity | Python | Competition</button>
-            </li>
-
-           
-
-          </ul>
-
-          <div class="filter-select-box">
-
-            <button class="filter-select" data-select>
-
-              <div class="select-value" data-selecct-value>Select category</div>
-
-              <div class="select-icon">
-                <ion-icon name="chevron-down"></ion-icon>
-              </div>
-
-            </button>
-
-            <ul class="select-list">
-
-              <li class="select-item">
-                <button data-select-item>All</button>
-              </li>
-
-              
-
-              
-
-            </ul>
-
-          </div>
-
-          <ul class="project-list">
-
-            <li class="project-item  active" data-filter-item data-category="all">
-              <a href="assets\certifi\code in c.pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\c.png" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Competition</h3>
-
-                <p class="project-category">CODE IN C</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\IETE .pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\iete.jpg" alt="task manager" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">CLUB</h3>
-
-                <p class="project-category">[IETE] Institution of Electronics and telecommunication Engineers</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\Python_Essentials.pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\python.jpg" alt="task manager" loading="lazy"height="400"width="400">
-                </figure>
-
-                <h3 class="project-title">Course</h3>
-
-                <p class="project-category">PYTHON</p>
-
-              </a>
-            </li>
-
-            
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="assets\certifi\Introduction_to_Cybersecurity.pdf" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\inro cysu.jpg" alt="fundo" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Course</h3>
-
-                <p class="project-category">Introduction_to_Cybersecurity</p>
-
-              </a>
-            </li>
-
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="assets\certifi\Managing_a_Business_Venture.pdf" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\ma bv.jpg" alt="dsm." loading="lazy">
-                </figure>
-
-                <h3 class="project-title">course</h3>
-
-                <p class="project-category">Managing_a_Business_Venture</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="assets\certifi\Cybersecurity_Essentials.pdf" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\cyb e.jpg" alt="metaspark" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Course</h3>
-
-                <p class="project-category">Cybersecurity_Essentials</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="assets\certifi\data engieering virtual internship.pdf" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\internship.png" alt="summary" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Internship</h3>
-
-                <p class="project-category">Data Engieering </p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\cloud virtul internship.pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\internship.png" alt="task manager" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Internship</h3>
-
-                <p class="project-category">Cloud</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\Amcat certiicate.pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\amcat.png" alt="task manager" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">EXAM</h3>
-
-                <p class="project-category">AMCAT</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="all">
-              <a href="assets\certifi\Esperanza .pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\exproject.png" alt="finance" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Competition</h3>
-
-                <p class="project-category">Esperanza</p>
-
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="assets\certifi\GDSC certificate.pdf" target="_blank">
-
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\gdsc.png" alt="fundo" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Google labs</h3>
-
-                <p class="project-category">GDSC</p>
-
-              </a>
-            </li>
-            
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\java .pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\java.png" alt="task manager" loading="lazy">
-                </figure>
-
-                <h3 class="project-title">Course</h3>
-
-                <p class="project-category">JAVA</p>
-
-              </a>
-            </li>
-
-         
-            
-
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\shl report.pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\shl.png" alt="task manager" loading="lazy" height="400" width="400">
-                </figure>
-
-                <h3 class="project-title">EXAM</h3>
-
-                <p class="project-category">SHL report</p>
-
-              </a>
-            </li>
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="assets\certifi\HICA .pdf" target="_blank">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-
-                  <img src="assets\images\LOGO OF HICA.jpg" alt="task manager" loading="lazy"height="400"width="400">
-                </figure>
-
-                <h3 class="project-title">CLUB</h3>
-
-                <p class="project-category">[HICA] Higher Institute Campus Ambassador</p>
-
-              </a>
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-
-
-      <!--
-        - #BLOG
-      -
-
-      <article class="blog" data-page="blog">
-
-        <header>
-          <h2 class="h2 article-title">Blog</h2>
-        </header>
-
-        <section class="blog-posts">
-
-          <ul class="blog-posts-list">
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-1.jpg" alt="Design conferences in 2022" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Design conferences in 2022</h3>
-
-                  <p class="blog-text">
-                    Veritatis et quasi architecto beatae vitae dicta sunt, explicabo.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-2.jpg" alt="Best fonts every designer" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Best fonts every designer</h3>
-
-                  <p class="blog-text">
-                    Sed ut perspiciatis, nam libero tempore, cum soluta nobis est eligendi.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-3.jpg" alt="Design digest #80" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Design digest #80</h3>
-
-                  <p class="blog-text">
-                    Excepteur sint occaecat cupidatat no proident, quis nostrum exercitationem ullam corporis suscipit.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-4.jpg" alt="UI interactions of the week" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">UI interactions of the week</h3>
-
-                  <p class="blog-text">
-                    Enim ad minim veniam, consectetur adipiscing elit, quis nostrud exercitation ullamco laboris nisi.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-5.jpg" alt="The forgotten art of spacing" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">The forgotten art of spacing</h3>
-
-                  <p class="blog-text">
-                    Maxime placeat, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-            <li class="blog-post-item">
-              <a href="#">
-
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-6.jpg" alt="Design digest #79" loading="lazy">
-                </figure>
-
-                <div class="blog-content">
-
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-
-                    <span class="dot"></span>
-
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-
-                  <h3 class="h3 blog-item-title">Design digest #79</h3>
-
-                  <p class="blog-text">
-                    Optio cumque nihil impedit uo minus quod maxime placeat, velit esse cillum.
-                  </p>
-
-                </div>
-
-              </a>
-            </li>
-
-          </ul>
-
-        </section>
-
-      </article>
-
-
-
-    -->
-
-      <!--
-        - #CONTACT
-      -->
-
-      <article class="contact" data-page="contact">
-
-        <header>
-          <h2 class="h2 article-title">Contact</h2>
-        </header>
-
-        <section class="mapbox" data-mapbox>
-          <figure>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d199666.5651251294!2d-121.58334177520186!3d38.56165006739519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac672b28397f9%3A0x921f6aaa74197fdb!2sSacramento%2C%20CA%2C%20USA!5e0!3m2!1sen!2sbd!4v1647608789441!5m2!1sen!2sbd"
-              width="400" height="300" loading="lazy"></iframe>
-          </figure>
-        </section>
-
-        <section class="contact-form">
-
-          <h3 class="h3 form-title">Contact Form</h3>     
-
-          <form id="contact-form" class="form" method="POST">
-            <div class="input-wrapper">
-              <input type="text" name="fullname" id="fullname" class="form-input" placeholder="Full name" required>
-              <input type="email" name="email" id="email" class="form-input" placeholder="Email address" required>
-            </div>
-          
-            <textarea name="message" id="message" class="form-input" placeholder="Your Message" required></textarea>
-          
-            <button class="form-btn" type="submit" id="submit-btn" disabled>
-              <ion-icon name="paper-plane"></ion-icon>
-              <span>Send Message</span>
-            </button>
-          </form>
-          
-
-        </section>
-
-      </article>
-
+        <ul class="nav-links">
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#education">Timeline</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#certificates">Certificates</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        
+        <button class="burger-btn" aria-label="Toggle Navigation">
+          <span class="material-symbols-outlined" style="font-size: 2rem;">menu</span>
+        </button>
+      </nav>
     </div>
+  </header>
 
-  </main>
+  <!-- Mobile Nav Menu -->
+  <div class="mobile-menu">
+    <a href="#hero" class="mobile-link">Home</a>
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#education" class="mobile-link">Timeline</a>
+    <a href="#skills" class="mobile-link">Skills</a>
+    <a href="#projects" class="mobile-link">Projects</a>
+    <a href="#certificates" class="mobile-link">Certificates</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+  </div>
 
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-wrapper">
+        <div class="hero-content">
+          <div class="tag">
+            <span class="material-symbols-outlined" style="font-size: 0.9rem;">security</span>
+            Cybersecurity &amp; SOC Specialist
+          </div>
+          <h1>
+            PRATHAMESH<br>
+            <span class="gradient-text">EKNATH BELDAR</span>
+          </h1>
+          <div class="typewriter-container">
+            <span>&gt;</span>
+            <span id="typewriter"></span>
+            <span class="cursor"></span>
+          </div>
+          <p class="hero-description">
+            IT engineer specializing in cybersecurity, threat detection, and SOC analysis. Proficient in Python scripting and workflow automation to build secure, robust infrastructures.
+          </p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">Selected Projects</a>
+            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+          </div>
+        </div>
+        
+        <div class="hero-image-area">
+          <div class="avatar-wrapper">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/prathamesh pic.jpg" alt="Prathamesh Eknath Beldar Portrait">
+          </div>
+          <div class="avatar-glow"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- About Section (Bento Grid) -->
+  <section id="about" class="reveal">
+    <div class="container">
+      <h2 class="section-title">About <span>Me</span></h2>
+      <div class="bento-grid">
+        
+        <!-- Main Bento Box (Intro & Club Leads) -->
+        <div class="bento-main">
+          <div class="glass-card bento-card" style="flex-grow: 1;">
+            <div>
+              <span class="tag" style="margin-bottom: 1rem;">
+                <span class="material-symbols-outlined" style="font-size: 0.9rem;">person</span>
+                Profile Summary
+              </span>
+              <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-main); margin-bottom: 1.5rem;">
+                I am an <strong>IT engineer</strong> specializing in <strong>cybersecurity</strong> and <strong>SOC analysis</strong>. I hold a strong interest in network security, threat detection, and incident response, using <strong>Python</strong> to implement automation and streamline security workflows.
+              </p>
+              <p>
+                Highly motivated to utilize my technical expertise to safeguard digital environments and develop modern cybersecurity techniques. My academic background is combined with hands-on practice in network monitoring, packet tracking, and cloud pipelines.
+              </p>
+              <p>
+                As the <strong>Management Lead of Higher Institute Campus Ambassadors (HICA)</strong>, I direct critical team operations, manage communication pathways, and synchronize club initiatives to deliver smooth event coordinates, refining my leadership and project organization capabilities.
+              </p>
+            </div>
+            
+            <div class="traits-grid">
+              <div class="trait-badge">
+                <span class="material-symbols-outlined">shield</span>
+                <span>Cybersecurity</span>
+              </div>
+              <div class="trait-badge">
+                <span class="material-symbols-outlined">analytics</span>
+                <span>SOC Analysis</span>
+              </div>
+              <div class="trait-badge">
+                <span class="material-symbols-outlined">terminal</span>
+                <span>Python Scripting</span>
+              </div>
+              <div class="trait-badge">
+                <span class="material-symbols-outlined">groups</span>
+                <span>Management</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Sidebar Bento Box (Contact Info & Links) -->
+        <div class="bento-sidebar">
+          <div class="glass-card bento-card">
+            <h3 class="font-display" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Contact Details</h3>
+            <div class="contact-info-list">
+              
+              <div class="info-item">
+                <div class="icon-box"><span class="material-symbols-outlined">alternate_email</span></div>
+                <div class="details">
+                  <p class="label">Email Address</p>
+                  <p class="val"><a href="mailto:prathameshbeldar@gmail.com" style="color: inherit; text-decoration: none;">prathameshbeldar@gmail.com</a></p>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <div class="icon-box"><span class="material-symbols-outlined">phone_iphone</span></div>
+                <div class="details">
+                  <p class="label">Mobile No.</p>
+                  <p class="val"><a href="tel:+918459919259" style="color: inherit; text-decoration: none;">8459919259</a></p>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <div class="icon-box"><span class="material-symbols-outlined">cake</span></div>
+                <div class="details">
+                  <p class="label">Birthday</p>
+                  <p class="val">March 26, 2005</p>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <div class="icon-box"><span class="material-symbols-outlined">distance</span></div>
+                <div class="details">
+                  <p class="label">Location</p>
+                  <p class="val">Amravati, Maharashtra, India</p>
+                </div>
+              </div>
 
+            </div>
 
+            <div class="social-links">
+              <a href="https://www.linkedin.com/in/prathamesh-beldar-357187283?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="social-btn" aria-label="LinkedIn">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">link</span>
+              </a>
+              <a href="https://github.com/prathameshbeldar12" target="_blank" class="social-btn" aria-label="GitHub">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">developer_mode</span>
+              </a>
+              <a href="https://www.instagram.com/prathamesh_beldar__26?utm_source=qr&igsh=cnloejl6Y2F3aHI5" target="_blank" class="social-btn" aria-label="Instagram">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">forum</span>
+              </a>
+            </div>
+          </div>
+        </div>
 
-  <!--
-    - custom js link
-  -->
-  <script src="./assets/js/script.js"></script>
+      </div>
 
-  <!--
-    - ionicon link
-  -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+      <!-- Services Grid Layer (What I Focus On) -->
+      <h3 class="section-title" style="font-size: 1.75rem; margin-top: 5rem; margin-bottom: 2.5rem;">Core <span>Competencies</span></h3>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="icon-box"><span class="material-symbols-outlined">security</span></div>
+          <div>
+            <h4>Cybersecurity &amp; SOC</h4>
+            <p>Familiarity with incident handling, network monitoring, vulnerability scanning, and threat intelligence mapping.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="icon-box"><span class="material-symbols-outlined">code_blocks</span></div>
+          <div>
+            <h4>Scripting &amp; Automation</h4>
+            <p>Utilizing Python for scripting automation workflows, developing backend endpoints, and deploying workflow tools like N8N.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="icon-box"><span class="material-symbols-outlined">database</span></div>
+          <div>
+            <h4>Web &amp; Database systems</h4>
+            <p>Creating database connections with MySQL and SQLite. Basic framework implementation using Django, HTML, and CSS.</p>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="icon-box"><span class="material-symbols-outlined">manage_accounts</span></div>
+          <div>
+            <h4>Project Management</h4>
+            <p>Coordinating campus campaigns, organizing student timelines, leading group sessions, and executing project milestones.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- EmailJS SDK -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  (function () {
-    emailjs.init("QJZHCI8E_KlVyUo9f");
-  })();
-</script>
+  <!-- Timeline Section (Education & Internships) -->
+  <section id="education" class="reveal">
+    <div class="container">
+      <h2 class="section-title">Education &amp; <span>Internships</span></h2>
+      
+      <div class="timeline">
+        
+        <!-- Degree -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-date">2022 - 2026</span>
+            <h3>Bachelor of Engineering</h3>
+            <p class="timeline-school">Prof. Ram Meghe Institute of Technology &amp; Research, Amravati</p>
+            <p class="timeline-desc">Specializing in <strong>Information Technology</strong>.</p>
+            <ul class="timeline-bullets">
+              <li><strong>Current Academic Standing</strong>: CGPA of <strong>8.05</strong> (overall degree percentage till 8th semester).</li>
+              <li>Focused coursework in network infrastructure, cryptographic systems, and software engineering.</li>
+            </ul>
+          </div>
+        </div>
 
-<!-- Your JS -->
-<script src="form.js"></script>
+        <!-- Cloud Internship -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-date">OCT 2024 - DEC 2024</span>
+            <h3>Cloud Virtual Internship</h3>
+            <p class="timeline-school">Virtual Experience</p>
+            <p class="timeline-desc">Gained hands-on experience in cloud infrastructure, hosting setups, and basic automation scripts.</p>
+            <ul class="timeline-bullets">
+              <li>Worked on cloud-based technologies and configuration principles.</li>
+              <li>Explored automated deployments and serverless structures.</li>
+            </ul>
+          </div>
+        </div>
 
+        <!-- Data Eng Internship -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-date">JULY 2024 - SEPT 2024</span>
+            <h3>Data Engineering Virtual Internship</h3>
+            <p class="timeline-school">Virtual Experience</p>
+            <p class="timeline-desc">Investigated data integration layouts, pipeline processing, and structured querying parameters.</p>
+            <ul class="timeline-bullets">
+              <li>Gained practical experience in data engineering workflows.</li>
+              <li>Designed processing workflows to normalize diverse dataset files.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- HSC College -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-date">2022 PASSING</span>
+            <h3>Higher Secondary Certificate (HSC)</h3>
+            <p class="timeline-school">Rashtriya Vidyalaya Junior College, Chalisgaon</p>
+            <p class="timeline-desc">Stream: Science (Information Technology). Scored a percentage of <strong>66%</strong>.</p>
+          </div>
+        </div>
+
+        <!-- School -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-date">2020 PASSING</span>
+            <h3>Secondary School Certificate (SSC)</h3>
+            <p class="timeline-school">Grace Academy, Chalisgaon</p>
+            <p class="timeline-desc">Completed SSC Board Exams with a percentage of <strong>82.20%</strong>.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills section -->
+  <section id="skills" class="reveal">
+    <div class="container">
+      <div class="skills-wrapper">
+        
+        <!-- Left Side: Bar Charts -->
+        <div>
+          <div class="skills-header">
+            <h2 class="section-title" style="text-align: left; margin-bottom: 1rem;">Technical <span>Proficiencies</span></h2>
+            <p>Skill distribution across core development frameworks, cybersecurity protocols, databases, and leadership areas.</p>
+          </div>
+          <div class="skills-list">
+            
+            <div class="skill-bar-container">
+              <div class="skill-info">
+                <span class="skill-name">Python Scripting &amp; Automation</span>
+                <span class="skill-percentage">80%</span>
+              </div>
+              <div class="skill-track">
+                <div class="skill-fill" data-width="80%"></div>
+              </div>
+            </div>
+
+            <div class="skill-bar-container">
+              <div class="skill-info">
+                <span class="skill-name">Cybersecurity (Wireshark, Kali Linux, SIEM)</span>
+                <span class="skill-percentage">75%</span>
+              </div>
+              <div class="skill-track">
+                <div class="skill-fill" data-width="75%"></div>
+              </div>
+            </div>
+
+            <div class="skill-bar-container">
+              <div class="skill-info">
+                <span class="skill-name">Web Development (HTML, CSS, Django)</span>
+                <span class="skill-percentage">70%</span>
+              </div>
+              <div class="skill-track">
+                <div class="skill-fill" data-width="70%"></div>
+              </div>
+            </div>
+
+            <div class="skill-bar-container">
+              <div class="skill-info">
+                <span class="skill-name">Databases (SQLite, MySQL)</span>
+                <span class="skill-percentage">65%</span>
+              </div>
+              <div class="skill-track">
+                <div class="skill-fill" data-width="65%"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
+        <!-- Right Side: Technical Tools details -->
+        <div class="skills-details">
+          <h3 class="font-display" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 1.5rem;">Tools &amp; <span>Frameworks</span></h3>
+          
+          <div class="details-card">
+            <div class="icon-box"><span class="material-symbols-outlined">security</span></div>
+            <div>
+              <h4>Security &amp; Analysis Tools</h4>
+              <p>Experienced in packet capture and telemetry analysis with <strong>Wireshark</strong>, operational setups inside <strong>Kali Linux</strong>, and security logging structures within <strong>SIEM</strong> suites.</p>
+            </div>
+          </div>
+
+          <div class="details-card">
+            <div class="icon-box"><span class="material-symbols-outlined">automation</span></div>
+            <div>
+              <h4>Workflow Automation</h4>
+              <p>Constructed automated messaging and chat integration flows using the <strong>N8N</strong> automation framework, parsing payload parameters, and triggering logic checkpoints.</p>
+            </div>
+          </div>
+
+          <div class="details-card">
+            <div class="icon-box"><span class="material-symbols-outlined">groups</span></div>
+            <div>
+              <h4>Management &amp; Coordination</h4>
+              <p>Active Management Lead inside the <strong>HICA Club</strong>. Organized student groups, structured timelines, coordinated campus programs, and applied project management methods.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="reveal">
+    <div class="container">
+      <h2 class="section-title">Academic &amp; Personal <span>Projects</span></h2>
+      <div class="projects-grid">
+        
+        <!-- Project 1 -->
+        <div class="glass-card project-card">
+          <div class="project-img-wrapper">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/inro%20cysu.jpg" alt="NIDS Project Preview">
+            <div class="project-overlay"></div>
+          </div>
+          <div class="project-details">
+            <div>
+              <div class="project-tags">
+                <span class="tag">Deep Learning</span>
+                <span class="tag">Python</span>
+                <span class="tag">SOC</span>
+              </div>
+              <h3 class="project-title">Network Intrusion Detection System</h3>
+              <p class="project-desc">
+                An advanced network safety system implementing deep learning concepts to detect intrusive activities.
+              </p>
+              <ul class="project-bullets">
+                <li>Utilized the standardized <strong>NSL-KDD dataset</strong> for training and modeling.</li>
+                <li>Conducted features preprocessing and numerical normalization.</li>
+                <li>Identified cyberattacks and suspicious network activities with high precision.</li>
+              </ul>
+            </div>
+            <a href="https://github.com/prathameshbeldar12" target="_blank" class="project-link">
+              View Source Code
+              <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">north_east</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="glass-card project-card">
+          <div class="project-img-wrapper">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/cyb%20e.jpg" alt="Packet Tracking Preview">
+            <div class="project-overlay"></div>
+          </div>
+          <div class="project-details">
+            <div>
+              <div class="project-tags">
+                <span class="tag">Networks</span>
+                <span class="tag">Wireshark</span>
+                <span class="tag">Packet Analysis</span>
+              </div>
+              <h3 class="project-title">Network Packet Tracking System</h3>
+              <p class="project-desc">
+                A flow analysis framework deployed inside college network infrastructure to analyze communication traffic.
+              </p>
+              <ul class="project-bullets">
+                <li>Captured and monitored network packets in real-time.</li>
+                <li>Analyzed traffic flows to map active network connection paths.</li>
+                <li>Maintained alerts to trigger on suspicious data transfers.</li>
+              </ul>
+            </div>
+            <a href="https://github.com/prathameshbeldar12" target="_blank" class="project-link">
+              View Source Code
+              <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">north_east</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="glass-card project-card">
+          <div class="project-img-wrapper">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/internship.png" alt="n8n Automation Preview">
+            <div class="project-overlay"></div>
+          </div>
+          <div class="project-details">
+            <div>
+              <div class="project-tags">
+                <span class="tag">N8N</span>
+                <span class="tag">Automation</span>
+                <span class="tag">AI Integration</span>
+              </div>
+              <h3 class="project-title">AI Customer Support System</h3>
+              <p class="project-desc">
+                An automated support ticket resolution and response pipeline using the N8N workflow engine.
+              </p>
+              <ul class="project-bullets">
+                <li>Developed logic flows in N8N to handle client data payloads.</li>
+                <li>Integrated AI responses for chat and email support triggers.</li>
+                <li>Programmed standard ticketing and escalation protocols.</li>
+              </ul>
+            </div>
+            <a href="https://github.com/prathameshbeldar12" target="_blank" class="project-link">
+              View Source Code
+              <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">north_east</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificates Section (Interactive Filters) -->
+  <section id="certificates" class="reveal">
+    <div class="container">
+      <h2 class="section-title">Certifications &amp; <span>Achievements</span></h2>
+      
+      <!-- Filter Tabs -->
+      <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="course">Courses</button>
+        <button class="filter-btn" data-filter="internship">Internships</button>
+        <button class="filter-btn" data-filter="club">Clubs</button>
+        <button class="filter-btn" data-filter="competition">Competitions &amp; Exams</button>
+      </div>
+
+      <!-- Certificate Grid -->
+      <div class="cert-grid">
+        
+        <!-- Cert: Cisco Cybersecurity Essentials (Resume Highlight) -->
+        <div class="cert-card" data-category="course">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/cyb%20e.jpg" alt="Cisco Cybersecurity Essentials Cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Cisco Course</span>
+              <h4 class="cert-title">Cisco Cybersecurity Essentials</h4>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Learned core cybersecurity concepts including network security, threat vectors, and incident response.</p>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Cybersecurity_Essentials.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert: Python Programming (Resume Highlight) -->
+        <div class="cert-card" data-category="course">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/python.jpg" alt="Python Programming Cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Course Highlight</span>
+              <h4 class="cert-title">Python Programming</h4>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Gained proficiency in Python programming for problem-solving, automation, and backend scripting.</p>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Python_Essentials.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert: iBase Electrosoft LLP Python (Resume Highlight) -->
+        <div class="cert-card" data-category="course">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/python.jpg" alt="iBase Python Cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Industrial Course</span>
+              <h4 class="cert-title">iBase Electrosoft LLP Python</h4>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Completed hands-on Python training with practical application development and coding skills.</p>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Python_Essentials.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 4 -->
+        <div class="cert-card" data-category="competition">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/c.png" alt="CODE IN C Cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Competition</span>
+              <h4 class="cert-title">CODE IN C Certificate</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/code%20in%20c.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 5 -->
+        <div class="cert-card" data-category="club">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/iete.jpg" alt="IETE Membership Cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Club Membership</span>
+              <h4 class="cert-title">IETE Institution of Electronics &amp; Telecom</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/IETE%20.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 6 -->
+        <div class="cert-card" data-category="course">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/inro%20cysu.jpg" alt="Introduction to cybersecurity cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Course</span>
+              <h4 class="cert-title">Introduction to Cybersecurity</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Introduction_to_Cybersecurity.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 7 -->
+        <div class="cert-card" data-category="course">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/ma%20bv.jpg" alt="Business venture cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Course</span>
+              <h4 class="cert-title">Managing a Business Venture</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Managing_a_Business_Venture.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 8 -->
+        <div class="cert-card" data-category="internship">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/internship.png" alt="Data Engineering virtual internship cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Internship</span>
+              <h4 class="cert-title">Data Engineering Virtual Internship</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/data%20engieering%20virtual%20internship.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 9 -->
+        <div class="cert-card" data-category="internship">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/internship.png" alt="Google cloud certificate cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Internship</span>
+              <h4 class="cert-title">Google Students Cloud Virtual Internship</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/cloud%20virtul%20internship.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 10 -->
+        <div class="cert-card" data-category="competition">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/amcat.png" alt="AMCAT assessment cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Exam Score</span>
+              <h4 class="cert-title">AMCAT Certification Report</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Amcat%20certiicate.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 11 -->
+        <div class="cert-card" data-category="competition">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/exproject.png" alt="Esperanza competition cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Competition</span>
+              <h4 class="cert-title">Esperanza Tech Event Certificate</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/Esperanza%20.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 12 -->
+        <div class="cert-card" data-category="internship">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/gdsc.png" alt="GDSC Google Labs cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Google Labs</span>
+              <h4 class="cert-title">GDSC Cloud Campaign Certificate</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/GDSC%20certificate.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 13 -->
+        <div class="cert-card" data-category="course">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/java.png" alt="Java foundation cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Course</span>
+              <h4 class="cert-title">Java Foundations Training Course</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/java%20.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 14 -->
+        <div class="cert-card" data-category="competition">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/shl.png" alt="SHL cognitive assessment cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Exam Score</span>
+              <h4 class="cert-title">SHL Skill Assessment report</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/shl%20report.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+        <!-- Cert 15 -->
+        <div class="cert-card" data-category="club">
+          <div class="cert-img-box">
+            <img src="https://prathameshbeldar12.github.io/portfolio/assets/images/LOGO%20OF%20HICA.jpg" alt="HICA Club management lead cert">
+          </div>
+          <div class="cert-content">
+            <div>
+              <span class="cert-category">Club Leadership</span>
+              <h4 class="cert-title">HICA Management Team Lead Cert</h4>
+            </div>
+            <a href="https://prathameshbeldar12.github.io/portfolio/assets/certifi/HICA%20.pdf" target="_blank" class="cert-view-btn">
+              <span class="material-symbols-outlined" style="font-size: 1.1rem;">picture_as_pdf</span>
+              View PDF
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="reveal">
+    <div class="container">
+      <div class="glass-card contact-wrapper">
+        
+        <div class="contact-left">
+          <div>
+            <span class="tag" style="margin-bottom: 1rem;">
+              <span class="material-symbols-outlined" style="font-size: 0.9rem;">chat</span>
+              Collab
+            </span>
+            <h2>Let's build<br>something secure.</h2>
+          </div>
+          <p>
+            I am open to security audits, automation scripts, cloud setup parameters, or Python development. Reach out and let's collaborate!
+          </p>
+          <div class="contact-info-list" style="margin-top: 1rem;">
+            <div class="info-item">
+              <div class="icon-box"><span class="material-symbols-outlined">call</span></div>
+              <div class="details">
+                <p class="label">Call Direct</p>
+                <p class="val">8459919259</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="icon-box"><span class="material-symbols-outlined">alternate_email</span></div>
+              <div class="details">
+                <p class="label">Mail Direct</p>
+                <p class="val">prathameshbeldar@gmail.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="portfolio-contact-form">
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="form-name">Full Name</label>
+              <input type="text" id="form-name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="form-email">Email Address</label>
+              <input type="email" id="form-email" placeholder="john@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="form-subject">Subject</label>
+            <input type="text" id="form-subject" placeholder="Project Inquiry / Job Opportunity" required>
+          </div>
+          <div class="form-group">
+            <label for="form-message">Message</label>
+            <textarea id="form-message" rows="5" placeholder="Write details about your project or offer..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="align-self: flex-start;">
+            Send Message
+            <span class="material-symbols-outlined" style="font-size: 1.1rem;">send</span>
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="container">
+      <div class="footer-wrapper">
+        <a href="#hero" class="footer-logo">PRATHAMESH<span>.</span></a>
+        <p class="footer-copyright">&copy; 2026 Prathamesh Eknath Beldar. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#about">About</a>
+          <a href="#education">Timeline</a>
+          <a href="#projects">Projects</a>
+          <a href="https://github.com/prathameshbeldar12" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Contact Form Success Modal -->
+  <div class="modal-overlay" id="success-modal-overlay">
+    <div class="glass-card success-modal">
+      <div class="icon-wrapper">
+        <span class="material-symbols-outlined" style="font-size: 2rem;">check_circle</span>
+      </div>
+      <h3>Message Sent!</h3>
+      <p>Thank you for reaching out, Prathamesh will get back to you shortly.</p>
+      <button class="btn btn-primary" id="close-modal-btn" style="padding: 0.75rem 1.5rem;">Close</button>
+    </div>
+  </div>
+
+  <!-- JavaScript logic: WebGL, Scroll Trigger, Filter, Mobile Menu, Typewriter -->
+  <script>
+    /* ----------------------------------------------------
+       1. TYPEWRITER EFFECT
+       ---------------------------------------------------- */
+    const typewriterElement = document.getElementById('typewriter');
+    const words = [
+      "CYBERSECURITY ANALYST", 
+      "SOC ANALYST", 
+      "IT ENGINEER",
+      "PYTHON SCRIPTING DEVELOPER"
+    ];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function type() {
+      const currentWord = words[wordIndex];
+      if (isDeleting) {
+        typewriterElement.textContent = currentWord.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typewriterElement.textContent = currentWord.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let speed = isDeleting ? 40 : 80;
+
+      if (!isDeleting && charIndex === currentWord.length) {
+        speed = 2000; // Pause at the end
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        speed = 500; // Pause before typing next word
+      }
+
+      setTimeout(type, speed);
+    }
+    document.addEventListener('DOMContentLoaded', () => type());
+
+    /* ----------------------------------------------------
+       2. MOBILE NAVIGATION
+       ---------------------------------------------------- */
+    const burgerBtn = document.querySelector('.burger-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const burgerIcon = burgerBtn.querySelector('.material-symbols-outlined');
+
+    burgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+      if (mobileMenu.classList.contains('open')) {
+        burgerIcon.textContent = 'close';
+      } else {
+        burgerIcon.textContent = 'menu';
+      }
+    });
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        burgerIcon.textContent = 'menu';
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        mobileMenu.classList.remove('open');
+        burgerIcon.textContent = 'menu';
+      }
+    });
+
+    /* ----------------------------------------------------
+       3. INTERACTIVE PORTFOLIO/CERTIFICATE FILTER
+       ---------------------------------------------------- */
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const certCards = document.querySelectorAll('.cert-card');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const filterValue = button.getAttribute('data-filter');
+
+        certCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          if (filterValue === 'all' || category === filterValue) {
+            card.classList.remove('hidden');
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95) translateY(10px)';
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'scale(1) translateY(0)';
+              card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            }, 50);
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    /* ----------------------------------------------------
+       4. SCROLL PROGRESS BARS & SECTIONS REVEAL
+       ---------------------------------------------------- */
+    const skillFills = document.querySelectorAll('.skill-fill');
+    const reveals = document.querySelectorAll('.reveal');
+    const navLinks = document.querySelectorAll('.nav-links a, .mobile-menu a');
+
+    function checkScroll() {
+      const triggerBottom = window.innerHeight * 0.85;
+
+      reveals.forEach(reveal => {
+        const revealTop = reveal.getBoundingClientRect().top;
+        if (revealTop < triggerBottom) {
+          reveal.classList.add('active');
+        }
+      });
+
+      skillFills.forEach(fill => {
+        const fillTop = fill.getBoundingClientRect().top;
+        if (fillTop < triggerBottom) {
+          const targetWidth = fill.getAttribute('data-width');
+          fill.style.width = targetWidth;
+        }
+      });
+
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+
+      let currentSectionId = 'hero';
+      document.querySelectorAll('section').forEach(sec => {
+        const top = sec.offsetTop - 120;
+        const bottom = top + sec.offsetHeight;
+        if (window.scrollY >= top && window.scrollY < bottom) {
+          currentSectionId = sec.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('load', checkScroll);
+
+    /* ----------------------------------------------------
+       5. CONTACT FORM & SUCCESS MODAL
+       ---------------------------------------------------- */
+    const contactForm = document.getElementById('portfolio-contact-form');
+    const modalOverlay = document.getElementById('success-modal-overlay');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      setTimeout(() => {
+        modalOverlay.classList.add('active');
+        contactForm.reset();
+      }, 300);
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+
+    /* ----------------------------------------------------
+       6. WEBGL ATMOSPHERIC SHADER BACKGROUND
+       ---------------------------------------------------- */
+    (function() {
+      const canvas = document.getElementById('shader-canvas');
+
+      function syncSize() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width  = w;
+          canvas.height = h;
+        }
+      }
+      window.addEventListener('resize', syncSize);
+      syncSize();
+
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return;
+
+      const vs = `
+        attribute vec2 a_position;
+        varying vec2 v_texCoord;
+        void main() {
+          v_texCoord = a_position * 0.5 + 0.5;
+          gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+      `;
+
+      const fs = `
+        precision highp float;
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        uniform vec2 u_mouse;
+        varying vec2 v_texCoord;
+
+        void main() {
+          vec2 uv = v_texCoord;
+          vec2 p = (v_texCoord - 0.5) * 2.0;
+          p.x *= u_resolution.x / u_resolution.y;
+
+          // Extremely slow organic motion for atmospheric background
+          float t = u_time * 0.08;
+          vec2 mouse = u_mouse / u_resolution;
+          
+          float color = 0.0;
+          for(float i = 1.0; i < 4.0; i++) {
+            p.x += 0.4 / i * sin(i * 2.0 * p.y + t + mouse.x * 0.5);
+            p.y += 0.4 / i * cos(i * 2.0 * p.x + t + mouse.y * 0.5);
+            color += 0.08 / length(p);
+          }
+
+          // Dark tech color palette (Deep space dark background mixed with electric cyan)
+          vec3 baseColor = vec3(0.043, 0.058, 0.063); // #0b0f10
+          vec3 glowColor = vec3(0.0, 0.65, 0.82); // Electric Cyan
+
+          vec3 finalColor = mix(baseColor, glowColor, color * 0.25);
+
+          // Soft vignette to darken borders
+          float vignette = 1.0 - length(uv - 0.5) * 1.3;
+          finalColor *= clamp(vignette, 0.0, 1.0);
+
+          gl_FragColor = vec4(finalColor, 1.0);
+        }
+      `;
+
+      function cs(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+
+      const prog = gl.createProgram();
+      gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+      gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+      const pos = gl.getAttribLocation(prog, 'a_position');
+      gl.enableVertexAttribArray(pos);
+      gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+      const uTime = gl.getUniformLocation(prog, 'u_time');
+      const uRes = gl.getUniformLocation(prog, 'u_resolution');
+      const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+      let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+      window.addEventListener('mousemove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width && rect.height) {
+          const nx = (event.clientX - rect.left) / rect.width;
+          const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+          mouse.x = nx * canvas.width;
+          mouse.y = ny * canvas.height;
+        }
+      });
+
+      function render(t) {
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        if (uTime) gl.uniform1f(uTime, t * 0.001);
+        if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+        if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(render);
+      }
+      render(0);
+    })();
+  </script>
 </body>
-
 </html>

@@ -1,0 +1,6 @@
+# Ignore local backup folders and templates
+stitch_dynamic_animated_portfolio/
+index.html.new
+.gitignore.new
+server.py
+*.log
